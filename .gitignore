@@ -1,0 +1,6 @@
+node_modules/
+output/
+report.csv
+*.log
+.DS_Store
+Thumbs.db
