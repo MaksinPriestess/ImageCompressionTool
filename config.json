@@ -1,0 +1,79 @@
+{
+    "paths": {
+      "inputDir": "./input",
+      "outputDir": "./output",
+      "tools": {
+        "pngquant": "pngquant.exe",
+        "mozjpeg": "cjpeg.exe",
+        "magick": "magick.exe"
+      }
+    },
+  
+    "selection": {
+      "includeExt": ["png", "jpg", "jpeg"],
+      "excludePatterns": []
+    },
+  
+    "profiles": {
+      "soft": {
+        "pngquant": ["--force", "--speed", "2", "--quality", "70-90"],
+        "mozjpeg": ["-quality", "82", "-progressive", "-optimize"]
+      },
+      "strong": {
+        "pngquant": ["--force", "--speed", "1", "--quality", "55-80"],
+        "mozjpeg": ["-quality", "75", "-progressive", "-optimize"]
+      }
+    },
+  
+    "pipeline": [
+      {
+        "name": "pngquant",
+        "enabled": true,
+        "matchExt": ["png"],
+        "profile": "soft",
+        "suffix": ".pngquant-soft"
+      },
+      {
+        "name": "pngquant",
+        "enabled": true,
+        "matchExt": ["png"],
+        "profile": "strong",
+        "suffix": ".pngquant-strong"
+      },
+      {
+        "name": "mozjpeg",
+        "enabled": true,
+        "matchExt": ["jpg", "jpeg"],
+        "profile": "soft",
+        "suffix": ".mozjpeg-soft"
+      },
+      {
+        "name": "mozjpeg",
+        "enabled": true,
+        "matchExt": ["jpg", "jpeg"],
+        "profile": "strong",
+        "suffix": ".mozjpeg-strong"
+      },
+      {
+        "name": "imagemagick_strip",
+        "enabled": true,
+        "matchExt": ["png", "jpg", "jpeg"],
+        "argsPng": ["-strip"],
+        "argsJpg": ["-strip"],
+        "suffix": ".magick-strip"
+      }
+    ],
+  
+    "logging": {
+      "csvPath": "./output/report.csv",
+      "writePerFile": true
+    },
+  
+    "options": {
+      "recursive": true,
+      "preserveTree": false,
+      "concurrency": 2,
+      "dryRun": false
+    }
+  }
+  
