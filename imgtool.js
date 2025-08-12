@@ -83,10 +83,22 @@ async function processOne(inputAbs, cfg) {
           const args = [...profile, '-outfile', outFile, srcForStep];
           const r = await execFileAsync(cfg.paths.tools.mozjpeg, args);
           elapsedMs = r.elapsedMs;
-        } else if (step.name === 'imagemagick_strip') {
-          const args = (inExt === 'png') ? (step.argsPng || ['-strip']) : (step.argsJpg || ['-strip']);
-          const r = await execFileAsync(cfg.paths.tools.magick, ['convert', srcForStep, ...args, outFile]);
-          elapsedMs = r.elapsedMs;
+        } else if (step.name === 'imagemagick_compress') {
+          const profileArgs = (inExt === 'png')
+            ? (cfg.profiles?.[step.profile]?.imagemagick_png || [])
+            : (cfg.profiles?.[step.profile]?.imagemagick_jpg || []);
+        
+          // проверяем, есть ли PNG8: или другой формат-префикс
+          let formatPrefix = null;
+          const cleanArgs = [];
+          for (const a of profileArgs) {
+            if (typeof a === 'string' && a.endsWith(':')) formatPrefix = a;
+            else cleanArgs.push(a);
+          }
+        
+          const outTarget = formatPrefix ? formatPrefix + outFile : outFile;
+          const r = await execFileAsync(cfg.paths.tools.magick, ['convert', srcForStep, ...cleanArgs, outTarget]);
+          elapsedMs = r.elapsedMs;    
         } else {
           throw new Error(`Unknown step: ${step.name}`);
         }
