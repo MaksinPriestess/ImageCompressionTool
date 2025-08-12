@@ -1,4 +1,5 @@
 node_modules/
+input/
 output/
 report.csv
 *.log
