@@ -17,11 +17,15 @@
     "profiles": {
       "soft": {
         "pngquant": ["--force", "--speed", "2", "--quality", "70-90"],
-        "mozjpeg": ["-quality", "82", "-progressive", "-optimize"]
+        "mozjpeg": ["-quality", "82", "-progressive", "-optimize"],
+        "imagemagick_png": ["-strip", "-quality", "90", "PNG8:"],
+        "imagemagick_jpg": ["-strip", "-quality", "82"]
       },
       "strong": {
         "pngquant": ["--force", "--speed", "1", "--quality", "55-80"],
-        "mozjpeg": ["-quality", "75", "-progressive", "-optimize"]
+        "mozjpeg": ["-quality", "75", "-progressive", "-optimize"],
+        "imagemagick_png": ["-strip", "-quality", "85", "PNG8:"],
+        "imagemagick_jpg": ["-strip", "-quality", "75"]
       }
     },
   
@@ -55,12 +59,18 @@
         "suffix": ".mozjpeg-strong"
       },
       {
-        "name": "imagemagick_strip",
+        "name": "imagemagick_compress",
         "enabled": true,
         "matchExt": ["png", "jpg", "jpeg"],
-        "argsPng": ["-strip"],
-        "argsJpg": ["-strip"],
-        "suffix": ".magick-strip"
+        "profile": "soft",
+        "suffix": ".magick-compress-soft"
+      },
+      {
+        "name": "imagemagick_compress",
+        "enabled": true,
+        "matchExt": ["png", "jpg", "jpeg"],
+        "profile": "strong",
+        "suffix": ".magick-compress-strong"
       }
     ],
   
