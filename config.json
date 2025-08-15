@@ -16,7 +16,7 @@
   
     "profiles": {
       "soft": {
-        "pngquant": ["--force", "--speed", "2", "--quality", "70-90"],
+        "pngquant": ["--force", "--speed", "2", "--quality", "85-95", "--strip"],
         "mozjpeg": ["-quality", "82", "-progressive", "-optimize"],
         "imagemagick_png": ["-strip", "-quality", "90", "PNG8:"],
         "imagemagick_jpg": ["-strip", "-quality", "82"]
