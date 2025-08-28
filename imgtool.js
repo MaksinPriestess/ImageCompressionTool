@@ -1,16 +1,27 @@
 #!/usr/bin/env node
-const fs = require('fs');
-const fsp = fs.promises;
-const path = require('path');
-const { execFile } = require('child_process');
+// ↑ Шебанг: нужен, чтобы запускать скрипт как ./script.js
+// Без этой строки запуск только так: node script.js
 
-function execFileAsync(cmd, args, opts = {}) {
-  return new Promise((resolve, reject) => {
-    const t0 = Date.now();
-    execFile(cmd, args, { windowsHide: true, ...opts }, (err, stdout, stderr) => {
-      const elapsedMs = Date.now() - t0;
-      if (err) { err.stdout = stdout; err.stderr = stderr; err.elapsedMs = elapsedMs; reject(err); }
-      else resolve({ stdout, stderr, elapsedMs });
+// ↓ Назначаем переменные для модулей Node.js
+const fs = require('fs');                       // работа с файлами (читать, писать, проверять размер)
+const fsp = fs.promises;                        // то же самое, но асинхронно через промисы
+const path = require('path');                   // работа с путями (имя файла, расширение, папка)
+const { execFile } = require('child_process');  // запуск внешних программ (например, pngquant, magick)
+
+function execFileAsync(cmd, args, opts = {}) {                 // функция для запуска внешней программы (например pngquant, mozjpeg), cmd  → команда (какую программу запустить), args → массив аргументов для этой команды, opts → настройки (по умолчанию пустой объект)
+  return new Promise((resolve, reject) => {                    // возвращаем Promise (обещание: успех или ошибка)
+    const t0 = Date.now();                                     // время старта (для замера длительности)
+    execFile(cmd, args, { windowsHide: true, ...opts },        // запускаем программу (cmd + args), windowsHide: true → в Windows не показывать чёрное окно, opts → любые доп. настройки
+      (err, stdout, stderr) => {                               // callback = "функция-ответ": err = ошибка, stdout = вывод, stderr = ошибки
+        const elapsedMs = Date.now() - t0;                     // сколько заняло времени
+        if (err) {                                             // если ошибка
+          err.stdout = stdout;                                 // прикрепляем stdout к ошибке
+          err.stderr = stderr;                                 // прикрепляем stderr к ошибке
+          err.elapsedMs = elapsedMs;                           // прикрепляем время
+          reject(err);                                         // завершить промис с ошибкой
+        } else {                                               // иначе
+          resolve({ stdout, stderr, elapsedMs });              // вернуть результат (выводы + время)
+        }
     });
   });
 }
